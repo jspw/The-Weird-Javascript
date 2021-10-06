@@ -1,23 +1,22 @@
 # The Weird Javascript
 
-This is [Mehedi hasan Shifat](https://www.github.com/jspw). I am trying to write about the things I feel **weird** about javascript (not saying bad :3). i will write something about javascript everyday whenever I get some free time.
+This is [Mehedi Hasan Shifat](https://www.github.com/jspw). I am trying to write about the things I feel **weird** about javascript (not saying bad :3). i will write something about javascript everyday whenever I get some free time.
 
 **Note** : This is not a blog/article/repo to learn javascript. you can get some awesome blogs and video playlists about javascript which are really awesome.
 
 # Table of Contents
 
-- [The Weird Javascript](#the-weird-javascript)
-- [Table of Contents](#table-of-contents)
-  - [Contents](#contents)
-    - [Hoisting](#hoisting)
-          - [code-01](#code-01)
-          - [code-02](#code-02)
+- [Contents](#contents)
+  - [Undefined | Error ?](#undefined-error)(being written )
+  - [Betrayal of Switch-Case](#betrayl-of-switch-case)(to be added)
+  - [Reference in Javascript](#reference-in-javascript)(to be added)
+  - [Type](#type)(to be added)
 
 ## Contents
 
-### Hoisting
+### Undefined || Error ?
 
-At first forget about the section title. Let's look at some code snippets.
+Let's look at some code snippets.
 
 ###### code-01
 
@@ -54,11 +53,11 @@ output :
 10
 ```
 
-**Great!** if it matches with you thinking, if doesn't then let's discover the mystery of bermuda triangle :D
+**Great!** if it matches with your thinking, if doesn't then let's discover the mystery of bermuda triangle :D
 
 If **javascript**(hight level language) is your first one & only language then may be you will find it normal\* but people like us coming from a low level language like **C** will find this fucking weird :3
 
-It's all about **hoisting**. Javascript moves declarations(like var num) to the top. So actually what / how the code was we can say like this :
+It's all about **hoisting**. Javascript actually split the initialization and declaration and moves declarations(like var num) to the top. So actually what / how the code was we can say like this :
 
 ```js
 var num = undefined;
@@ -66,7 +65,11 @@ num = 10;
 console.log(num);
 ```
 
-Then why in the [first example](#code-01) it printed `undefined` ?Actually in the [first example](#code-02) the code were executed like this :
+So for `var` a variable is declared with `undefined` at the top, then when the line of declaration comes it assign value to it.
+
+Then why in the [first example](#code-01) it printed `undefined` ?
+If we look at the code carefully we can see that, at the [first code](#code-01) snippet, we print the value of num before store the value when it was undefined.But in the second case it was already initialized.
+Actually in the [first example](#code-02) the code were executed like this :
 
 ```js
 var num = undefined;
@@ -74,6 +77,90 @@ console.log(num); // so it was undefined when we were logging num
 num = 10;
 ```
 
-If we look at the code carefully we can see that, at the [first code](#code-01) snippet, we print the value of num before store the value when it was undefined.But in the second case it was already initialized.
-
 **Note** : This is not the actual scenario but something like this was happened. And one thing more about the words `insert` and `initialize` value to a variable , we will talk about it later.
+
+For that reason we can call a function in js before initializing it like this -
+
+###### code-03
+
+```js
+printSum(100);
+
+function printSum(n) {
+  // print sum of 1 to n
+  console.log((n * (n - 1)) / 2);
+}
+```
+
+Let's find some corner cases how can we declare (?) or initialize variables in js.
+
+###### code-04
+
+```js
+num = 10;
+console.log(num);
+```
+
+Now i have just removed `var` from the previous code ([code-02](#code-02)). will it run properly ? Is it undefined for hoisting ? or `Reference error` ?
+
+output :
+
+```
+10
+```
+
+As there is no `var num` in our code there is no hoisting. It just initialized x.
+
+We have learnt about hoisting. Javascript has now a few more declaration keys like the weird `var` , they are `let`, `const`. Why the hack we need let or const as we already have var ? We have enough weirdness in js, why adding some more?
+
+Wait, think positive. May be it can save us from the devil var :3
+
+Before going to `let` & `const`, let's observe some weirdness of `var` and why `var` is the devil :3
+
+###### code-05
+
+```js
+var x = 10;
+var x = "hello";
+var x = true;
+console.log(x);
+```
+
+What the hack is this ? I have initialized x with 10 which is a number , then with "hello" string and at last with a boolean true. Is the program runnable ? `error` `error` `error` ? `reference` error ?
+
+Let's see the output :
+
+```
+true
+```
+
+for hoisting `x` was declared at the top before execution and then it was initialized with 10,"hello" and true accordingly.As at the last before logging it was a boolean, it printed `true`.
+
+###### code-06
+
+```js
+var x = 10;
+function increment() {
+  x++;
+}
+increment();
+console.log(x);
+```
+
+now you can predict the output i hope so.
+
+output
+
+```
+11
+```
+
+`var` actually declares a function-scoped or globally-scoped variable.
+
+As we can see declaring variables with `var` is risky. There is a very good possibility of using the same name of two different variables for different task and it can produce a bug which will be difficult to find out and fix it.
+
+To solve this problem, they introduced `let`. `const` is the constant form of `let` actually.
+
+In mathematics we used to say, `let x .....`. Most languages like **Scheme** adopt let from mathematical statement. If you have done some study on `how js was created or how`, it will be more clear to understand. btw **Scheme** has also `let*`.
+
+<!-- Let's rewrite some of the previously written code snippets. -->
