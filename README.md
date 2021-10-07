@@ -155,36 +155,46 @@ true
 
 For hoisting, `x` was declared at the top before execution and then it was initialized with 10,"hello" and true accordingly.As at the last before logging it was a boolean, it printed `true`.
 
+`var` actually declares a function-scoped or globally-scoped variable. There are some interesting facts here. Using`var` for declaration javascript moves the declaration at the top of the function(\*) actually. Let's see the code -
+
 ###### code-06
 
 ```js
-var x = 10;
-function increment() {
-  x++;
+function foo() {
+  var x = 10;
+
+  if (x > 50) {
+    var x = 51;
+  } else {
+    var x = -1;
+  }
+
+  console.log(x);
 }
-increment();
-console.log(x);
+
+foo();
 ```
 
-Now you can predict the output, I hope so.
-
-output
+output :
 
 ```
-11
+-1
 ```
 
-`var` actually declares a function-scoped or globally-scoped variable. There are some interesting facts here. Using`var` for declaration javascript moves the declaration at the top of the function(\*) actually. Let's see the code -
+Inside the function its always the same `x`.
 
 ###### code-07
 
 ```js
-var x = 10;
-function foo() {
-  var x = 20;
+function goo() {
+  var x = 10;
+  function foo() {
+    var x = 20;
+  }
+  foo();
+  console.log(x);
 }
-foo();
-console.log(x);
+goo();
 ```
 
 Can you guess the output this time ? `20` haa ??
@@ -195,7 +205,7 @@ Output :
 10
 ```
 
-Shouldn't surprise as i have told before that `var` declares a function scoped variable so `x` inside `foo` is hoisted at the top of the `foo` function not globally. That's why global `x` and `x` inside `foo` is not same.Let's see another example -
+Shouldn't surprise as I have told before that `var` declares a function scoped variable so `x` inside `foo` is hoisted at the top of the `foo` function not globally. That's why global `x` and `x` inside `foo` is not same.Let's see another example -
 
 ###### code-08
 
@@ -214,7 +224,7 @@ Output :
 ReferenceError: y is not defined
 ```
 
-YES! Successfully created a `reference error` :3
+YES! Successfully created a `reference error` again :3
 
 You can't access a variable out of its scope, and thats actually gooood!
 
@@ -246,4 +256,47 @@ To solve this problem, they introduced `let`. `const` is the constant form of `l
 
 In mathematics we used to say, `let x .....`. Most languages like **Scheme** adopt let from mathematical statement. If you have done some study on `how js was created or how`, it will be more clear to understand. btw **Scheme** has also `let*`.
 
+Let's rewrite some of the previously written code snippets with `let`.
 
+###### code-10
+
+```js
+console.log(num);
+let num = 10;
+```
+
+Output :
+
+```
+ReferenceError: Cannot access 'num' before initialization
+```
+
+###### code-11
+
+```js
+let x = 10;
+// .......
+// .......
+// .......
+// .......
+let x = "shifat"; // SyntaxError: Identifier 'x' has already been declared
+```
+
+###### code-12
+
+```js
+let num = 10;
+if (1) {
+  let num = 1000; // num is a new variable here ,not the global one
+}
+
+console.log(num);
+```
+
+output :
+
+```
+10
+```
+
+`let` declares block-scoped which is limited to the scop of the block.The variable is said to be in a "temporal dead zone" (TDZ) from the start of the block until the initialization has completed. The variables are not accessible until fully initialization. `let` saves us a lot. Most of the weird stuffs of `var` is covered with `let` . So its safer to use `let` then `var`.
