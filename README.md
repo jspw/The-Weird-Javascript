@@ -109,7 +109,26 @@ output :
 10
 ```
 
-As there is no `var num` in our code there is no hoisting. It just initialized x.
+As there is no `var num` in our code there is no hoisting. It just initialized x. This could be a different scenario if we were using `strict` mode. Strict mode is a feature of ES5. It applies some restrictions.
+
+```js
+"use strict";
+num = 10;
+console.log(num);
+```
+
+In this case we will get `ReferenceError: num is not defined`
+
+You can also set strict mode for individual functions too.
+
+```js
+var note = "The whole script is not in strict mode now";
+
+function strictMode() {
+  "use strict";
+  // do your stuffs
+}
+```
 
 We have learnt about hoisting. Javascript has now a few more declaration keys like the weird `var` , they are `let`, `const`. Why the hack we need let or const as we already have var ? We have enough weirdness in js, why adding some more?
 
@@ -126,7 +145,7 @@ var x = true;
 console.log(x);
 ```
 
-What the hack is this ? I have initialized x with 10 which is a number , then with "hello" string and at last with a boolean true. Is the program runnable ? `error` `error` `error` ? `reference` error ?
+What the hack is this ? I have initialized x with 10 which is a number , then again with "hello" string and at last with a boolean true. Is the program runnable ? `error` `error` `error` ? `reference` error ?
 
 Let's see the output :
 
@@ -134,7 +153,7 @@ Let's see the output :
 true
 ```
 
-for hoisting `x` was declared at the top before execution and then it was initialized with 10,"hello" and true accordingly.As at the last before logging it was a boolean, it printed `true`.
+For hoisting, `x` was declared at the top before execution and then it was initialized with 10,"hello" and true accordingly.As at the last before logging it was a boolean, it printed `true`.
 
 ###### code-06
 
@@ -147,7 +166,7 @@ increment();
 console.log(x);
 ```
 
-now you can predict the output i hope so.
+Now you can predict the output, I hope so.
 
 output
 
@@ -155,12 +174,76 @@ output
 11
 ```
 
-`var` actually declares a function-scoped or globally-scoped variable.
+`var` actually declares a function-scoped or globally-scoped variable. There are some interesting facts here. Using`var` for declaration javascript moves the declaration at the top of the function(\*) actually. Let's see the code -
 
-As we can see declaring variables with `var` is risky. There is a very good possibility of using the same name of two different variables for different task and it can produce a bug which will be difficult to find out and fix it.
+###### code-07
+
+```js
+var x = 10;
+function foo() {
+  var x = 20;
+}
+foo();
+console.log(x);
+```
+
+Can you guess the output this time ? `20` haa ??
+
+Output :
+
+```
+10
+```
+
+Shouldn't surprise as i have told before that `var` declares a function scoped variable so `x` inside `foo` is hoisted at the top of the `foo` function not globally. That's why global `x` and `x` inside `foo` is not same.Let's see another example -
+
+###### code-08
+
+```js
+var x = 10;
+function foo() {
+  var y = 10;
+}
+foo();
+console.log(y);
+```
+
+Output :
+
+```js
+ReferenceError: y is not defined
+```
+
+YES! Successfully created a `reference error` :3
+
+You can't access a variable out of its scope, and thats actually gooood!
+
+here is a nested functional scope example of var -
+
+###### code-09
+
+```js
+function google() {
+  function foo() {
+    var y = 10;
+    function bar() {
+      var p = 12;
+      console.log("value of y : ", y); // will print 10
+    }
+    bar();
+    console.log("value of p : ", p); // reference error for p
+  }
+  foo();
+}
+google();
+```
+
+Actually when we declare a variable it is available everywhere in the scope as well as any lower/child/inner scopes.
+
+Beside that, as we can see declaring variables with `var` is risky. There is a very good possibility of using the same name of two different variables for different task and it can produce a bug which will be difficult to find out and fix it.
 
 To solve this problem, they introduced `let`. `const` is the constant form of `let` actually.
 
 In mathematics we used to say, `let x .....`. Most languages like **Scheme** adopt let from mathematical statement. If you have done some study on `how js was created or how`, it will be more clear to understand. btw **Scheme** has also `let*`.
 
-<!-- Let's rewrite some of the previously written code snippets. -->
+
